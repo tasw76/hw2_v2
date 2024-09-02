@@ -1,0 +1,107 @@
+---
+title: "programming_in_baseR"
+format: html
+editor: visual
+---
+
+```{r}
+# task 1 basic vector practice
+before <- c(120,151,125, 126, 115, 132, 132, 129, 134, 139, 127, 122, 127, 135, 133, 128, 147, 138, 140, 132)
+
+after <- c(127, 145, 135, 122, 115, 122, 123, 126, 126, 129, 132, 146, 120, 114, 121, 120, 128, 120, 133, 115)
+
+#assign names to the vector elements
+names(before) <- paste("subject", 1:20, sep = "_")
+names(after) <- paste("subject", 1:20, sep = "_")
+
+#calculate the decrease, get avg decrease, get only decrease changes. 
+change <- before - after
+avg_decr <- mean(change)
+#get the subjects with decrease in the blood pressure
+positive_indices <- which(change>0)
+print(positive_indices)
+
+positive_change_boolean <- change>0
+positive_change <- change[positive_change_boolean]
+positive_change
+avg_positive_decr <- mean(positive_change)
+avg_positive_decr
+
+```
+
+```{r}
+#Task 2, create a data frame object with 4 col. corresponding to the data
+patient <- 1:length(before)
+patient_data <- data.frame(
+  patient = patient,
+  pre_bp = before,
+  post_bp = after,
+  diff_bp = change
+)
+# print the data frame
+print(patient_data)
+negative_diff_dp <- patient_data[patient_data$diff_bp<0, ]
+# use subset() function to do this
+negative_diff_dp2 <- subset(patient_data, diff_bp<0)
+
+patient_data$low <- patient_data$post_bp < 120
+
+knitr::kable(patient_data, caption = "Blood Pressure Data")
+
+
+```
+
+```{r}
+#Task 3, list practice
+pre_placebo <- c(138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+post_placebo <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+
+diff_placebo <- pre_placebo - post_placebo
+
+placebo_data <- data.frame(
+  patient = 1:10,  # Patient IDs from 1 to 10
+  pre_measure = pre_placebo,
+  post_measure = post_placebo,
+  diff_measure = diff_placebo
+)
+
+# add a column TRUE mean post measure is lower than 120
+placebo_data$low_measure <- placebo_data$post_measure < 120
+
+knitr::kable(placebo_data, caption = "Placebo Experiment Blood Pressure Data")
+
+# create a link
+experiment_list <- list(
+  treatment= patient_data,
+  placebo = placebo_data
+)
+
+# print the list to verify structure
+print(experiment_list)
+```
+
+```{r}
+# access the first list element using three different type of syntax
+# use dollar sign
+
+treatment_data <- experiment_list$treatment
+print(treatment_data)
+
+# use double square brackets
+treatment_data <- experiment_list[[1]]
+print(treatment_data)
+
+# Using double square brackets with the element name as a string:
+treatment_data <- experiment_list[["treatment"]]
+print(treatment_data)
+
+# use list created, access pre_measure in placebo data frame
+pre_measure_placebo <- experiment_list$placebo$pre_measure
+pre_measure_placebo
+```
+
+
+
+
+
+
